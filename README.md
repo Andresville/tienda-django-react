@@ -55,7 +55,7 @@ curl --location 'http://localhost:3000/api/users/login/' \
 ```  
 #### Create
 ```bash
-curl --location 'http://localhost:3000/api/admin/users/' \
+curl --location 'http://localhost:3000/api/admin/users/create/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjA2NjgzODN9.L7hXJIlQ6sV3STvBWPMTE6pa8p9ZJm26K19CtILdUxo' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -66,3 +66,8 @@ curl --location 'http://localhost:3000/api/admin/users/' \
   "role": "USER"
 }'
 ```
+#### Listar 
+```bash
+curl --location 'http://localhost:3000/api/admin/users/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjA2NjgzODN9.L7hXJIlQ6sV3STvBWPMTE6pa8p9ZJm26K19CtILdUxo'
+```  

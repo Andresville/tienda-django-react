@@ -2,26 +2,18 @@ import json
 import jwt
 from datetime import datetime, timedelta
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.hashers import check_password
-from .decorators import admin_required
-from .models import User
+from django.views.decorators.http import require_http_methods
 from decouple import config
 
-@csrf_exempt
-def login_user(request):
-  if request.method != 'POST':
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
+from supercheck.common.exceptions import ValidationException
+from supercheck.common.decorators import admin_required
+from .models import User
 
+@require_http_methods(['POST'])
+def login_user(request):
   try:
     data = json.loads(request.body)
-    email = data['email']
-    password = data['password']
-
-    user = User.objects.get(email=email, available=True)
-
-    if not check_password(password, user.password):
-      return JsonResponse({'error': 'Usuario o contraseña incorrectos'}, status=401)
+    user = User.login(data['email'], data['password'])
 
     # Crear payload con expiración
     payload = {
@@ -41,17 +33,16 @@ def login_user(request):
       }
     })
 
+  except ValidationException as e:
+    return JsonResponse({'error': e.message}, status=e.status_code)
   except User.DoesNotExist:
     return JsonResponse({'error': 'Usuario o contraseña incorrectos'}, status=401)
   except Exception as e:
     return JsonResponse({'error': str(e)}, status=400)
 
-@csrf_exempt
+@require_http_methods(['POST'])
 @admin_required
 def create_user(request):
-  if request.method != 'POST':
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
-
   try:
     data = json.loads(request.body)
     # Validaciones mínimas
@@ -90,9 +81,24 @@ def create_user(request):
   except Exception as e:
     return JsonResponse({'error': str(e)}, status=500)
 
-
+@require_http_methods(['PUT','PATCH'])
+@admin_required
 def update_user(request):
   ...
 
+@require_http_methods(['DELETE'])
+@admin_required
 def delete_user(request):
   ...
+
+@require_http_methods(['GET'])
+@admin_required
+def users(request):
+  """
+  Devuelve el listado de usuarios disponibles (available = True)
+  """
+  try:
+    users = User.objects.filter(available=True).values('id', 'name', 'surname', 'email', 'role', 'created_at', 'updated_at')
+    return JsonResponse(list(users), safe=False, status=200)
+  except Exception as e:
+    return JsonResponse({'error': str(e)}, status=500)

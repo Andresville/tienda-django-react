@@ -76,3 +76,15 @@ curl --location 'http://localhost:3000/api/admin/users/' \
 curl --location --request DELETE 'http://localhost:3000/api/admin/users/3/delete/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjA2NjgzODN9.L7hXJIlQ6sV3STvBWPMTE6pa8p9ZJm26K19CtILdUxo'
 ```  
+#### Update
+```bash
+curl --location --request PUT 'http://localhost:3000/api/admin/users/3/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjA2NjgzODN9.L7hXJIlQ6sV3STvBWPMTE6pa8p9ZJm26K19CtILdUxo' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "name": "Juan Ernesto",
+  "surname": "Pérez",
+  "email": "juan.perez@example.com",
+  "role": "USER"
+}'
+```

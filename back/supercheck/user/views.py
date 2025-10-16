@@ -87,13 +87,32 @@ def create_user(request):
   except json.JSONDecodeError:
     return JsonResponse({'error': 'JSON inválido'}, status=400)
   except Exception as e:
-    print(f"class: {e.__class__.__name__}")
     return JsonResponse({'error': str(e)}, status=500)
 
 @require_http_methods(['PUT','PATCH'])
 @admin_required
-def update_user(request):
-  ...
+def update_user(request, user_id):
+  try:
+    data = json.loads(request.body)
+    user = User.objects.get(id=user_id, available=True)
+    updatable_fields = ['name', 'surname', 'email', 'role']
+
+    for field in updatable_fields:
+      if field in data:
+        setattr(user, field, data[field])
+    
+    user.save()
+    return JsonResponse({
+      'id': user.id,
+      'name': user.name,
+      'surname': user.surname,
+      'email': user.email,
+      'role': user.role
+    }, status=201)
+  except json.JSONDecodeError:
+    return JsonResponse({'error': 'JSON inválido'}, status=400)
+  except Exception as e:
+    return JsonResponse({'error': str(e)}, status=500)
 
 @require_http_methods(['DELETE'])
 @admin_required

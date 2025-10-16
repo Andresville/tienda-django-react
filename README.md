@@ -52,4 +52,17 @@ curl --location 'http://localhost:3000/api/users/login/' \
   "email": "admin@example.com",
   "password": "admin1234"
 }'
+```  
+#### Create
+```bash
+curl --location 'http://localhost:3000/api/admin/users/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjA2NjgzODN9.L7hXJIlQ6sV3STvBWPMTE6pa8p9ZJm26K19CtILdUxo' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "name": "Juan",
+  "surname": "Pérez",
+  "email": "juan.perez@example.com",
+  "password": "MiClaveSegura123",
+  "role": "USER"
+}'
 ```

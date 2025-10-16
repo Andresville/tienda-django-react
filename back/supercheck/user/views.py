@@ -49,7 +49,47 @@ def login_user(request):
 @csrf_exempt
 @admin_required
 def create_user(request):
-  return JsonResponse({"msg": "Usuario creado."})
+  if request.method != 'POST':
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+  try:
+    data = json.loads(request.body)
+    # Validaciones mínimas
+    required_fields = ['name', 'surname', 'email', 'password', 'role']
+    for field in required_fields:
+      if field not in data:
+        return JsonResponse({'error': f'Falta el campo {field}'}, status=400)
+
+    # Verificar rol válido
+    if data['role'] not in [choice for choice, _ in User.Roles.choices]:
+      return JsonResponse({'error': 'Rol inválido'}, status=400)
+
+    # Verificar email único
+    if User.objects.filter(email=data['email'], available=True).exists():
+      return JsonResponse({'error': 'El email ya existe'}, status=400)
+
+    # Crear usuario
+    user = User.objects.create(
+      name=data['name'],
+      surname=data['surname'],
+      email=data['email'],
+      password=data['password'],
+      role=data['role']
+    )
+
+    return JsonResponse({
+      'id': user.id,
+      'name': user.name,
+      'surname': user.surname,
+      'email': user.email,
+      'role': user.role
+    }, status=201)
+
+  except json.JSONDecodeError:
+    return JsonResponse({'error': 'JSON inválido'}, status=400)
+  except Exception as e:
+    return JsonResponse({'error': str(e)}, status=500)
+
 
 def update_user(request):
   ...

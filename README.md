@@ -7,6 +7,7 @@ source .venv/bin/activate
 pip install django djangorestframework
 pip install pyjwt
 pip install django-extensions
+pip install python-decouple
 
 * Si el proyecto ya está creado ignorar esto *  
   django-admin startproject supercheck
@@ -18,7 +19,12 @@ pip install django-extensions
   python3 manage.py startapp variant
 
 python3 manage.py runserver 0.0.0.0:3000
-```
+```  
+
+## URLs
+```bash
+python manage.py show_urls
+``` 
 
 ## Migraciones  
 ```bash

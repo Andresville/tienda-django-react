@@ -4,12 +4,9 @@ from datetime import datetime, timedelta
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
+from .decorators import admin_required
 from .models import User
-
-# Clave secreta para firmar JWT (guardar segura en producción)
-JWT_SECRET = 'u7G8!fR2x#9QvL$1zA6pD@wT5sE^cH3jK8mN0bY4oZ&lV*X?R+S!F%U'
-JWT_ALGORITHM = 'HS256'
-JWT_EXP_DELTA_HOURS = 24
+from decouple import config
 
 @csrf_exempt
 def login_user(request):
@@ -30,11 +27,11 @@ def login_user(request):
     payload = {
       'user_id': user.id,
       'role': user.role,
-      'exp': datetime.utcnow() + timedelta(hours=JWT_EXP_DELTA_HOURS)
+      'exp': datetime.utcnow() + timedelta(hours=int(config('JWT_EXP_DELTA_HOURS')))
     }
 
     return JsonResponse({
-      'token': jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM),
+      'token': jwt.encode(payload, config('JWT_SECRET'), algorithm=config('JWT_ALGORITHM')),
       'user': {
         'id': user.id,
         'name': user.name,
@@ -49,8 +46,10 @@ def login_user(request):
   except Exception as e:
     return JsonResponse({'error': str(e)}, status=400)
 
+@csrf_exempt
+@admin_required
 def create_user(request):
-  ...
+  return JsonResponse({"msg": "Usuario creado."})
 
 def update_user(request):
   ...

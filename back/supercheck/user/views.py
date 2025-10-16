@@ -2,6 +2,7 @@ import json
 import jwt
 from datetime import datetime, timedelta
 from django.http import JsonResponse
+from django.db.utils import IntegrityError
 from django.views.decorators.http import require_http_methods
 from decouple import config
 
@@ -60,13 +61,20 @@ def create_user(request):
       return JsonResponse({'error': 'El email ya existe'}, status=400)
 
     # Crear usuario
-    user = User.objects.create(
-      name=data['name'],
-      surname=data['surname'],
-      email=data['email'],
-      password=data['password'],
-      role=data['role']
-    )
+    try:
+      user = User.objects.create(
+        name=data['name'],
+        surname=data['surname'],
+        email=data['email'],
+        password=data['password'],
+        role=data['role']
+      )
+    except IntegrityError:
+      # Reactivo al usuario
+      user = User.objects.get(email=data['email'])
+      user.available = True
+      user.deleted_at = None
+      user.save()
 
     return JsonResponse({
       'id': user.id,
@@ -79,6 +87,7 @@ def create_user(request):
   except json.JSONDecodeError:
     return JsonResponse({'error': 'JSON inválido'}, status=400)
   except Exception as e:
+    print(f"class: {e.__class__.__name__}")
     return JsonResponse({'error': str(e)}, status=500)
 
 @require_http_methods(['PUT','PATCH'])
@@ -88,8 +97,20 @@ def update_user(request):
 
 @require_http_methods(['DELETE'])
 @admin_required
-def delete_user(request):
-  ...
+def delete_user(request, user_id):
+  """
+    Borra un usuario
+    - No se puede borrar el mismo usuario logueado
+  """
+  try:
+    user = User.objects.get(id=user_id, available=True)
+    if user.id == request.user.id:
+      return JsonResponse({'error': 'No se puede borrar el mismo usuario que inicio sesión'}, status=400)
+    
+    user.soft_delete()
+    return JsonResponse('Usuario eliminado exitosamente', safe=False, status=200)
+  except Exception as e:
+    return JsonResponse({'error': str(e)}, status=500)
 
 @require_http_methods(['GET'])
 @admin_required

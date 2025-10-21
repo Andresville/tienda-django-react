@@ -35,6 +35,7 @@ python manage.py show_urls
 python3 manage.py makemigrations user
 python3 manage.py makemigrations category
 python3 manage.py makemigrations seller
+python3 manage.py makemigrations product
 python3 manage.py migrate
 
 # Los seeders precargan datos en la base de datos, asi no esta vacia
@@ -99,6 +100,7 @@ curl --location --request PUT 'http://localhost:3000/api/admin/users/3/' \
   "role": "USER"
 }'
 ```  
+---  
 ### Categories  
 #### Listar
 ```bash
@@ -129,6 +131,7 @@ curl --location --request PUT 'http://localhost:3000/api/admin/categories/16/' \
 curl --location --request DELETE 'http://localhost:3000/api/admin/categories/16/delete/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
 ```  
+---  
 ### Sellers
 #### Listar
 ```bash
@@ -155,7 +158,46 @@ curl --location --request PUT 'http://localhost:3000/api/admin/sellers/1/' \
 ```  
 #### Borrar
 ```bash
-curl --location --request DELETE 'http://localhost:3000/api/admin/sellers/1/delete/' \
+```  
+---  
+### Productos
+#### Listar
+```bash
+curl --location 'http://localhost:3000/api/admin/products/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
 ```  
-### Productos
+### Crear  
+```bash
+curl --location 'http://localhost:3000/api/admin/products/create/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI' \
+--header 'Content-Type: application/json' \
+--data '{
+  "name": "Zapatillas Running",
+  "description": "Zapatillas deportivas para correr",
+  "price": 18000,
+  "price_without_taxes": 15000,
+  "available_stock": 50,
+  "seller_id": 1,
+  "category_ids": [9]
+}'
+```
+#### Update
+```bash
+curl --location --request PUT 'http://localhost:3000/api/admin/products/1/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjExNzIzNDB9.PYs-n1NgwQFukAumqW89kCp5cXTreQf2ycTN_V4mmqI' \
+--header 'Content-Type: application/json' \
+--data '{
+  "name": "Zapatillas Running Nike",
+  "description": "Zapatillas deportivas para correr muchos kilómetros",
+  "price": 21000,
+  "price_without_taxes": 17500,
+  "available_stock": 150,
+  "seller_id": 2,
+  "category_ids": [10]
+}'
+```  
+#### Borrar
+```bash
+curl --location --request DELETE 'http://localhost:3000/api/admin/products/2/delete/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjExNzIzNDB9.PYs-n1NgwQFukAumqW89kCp5cXTreQf2ycTN_V4mmqI'
+```  

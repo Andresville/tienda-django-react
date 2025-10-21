@@ -30,6 +30,7 @@ python manage.py show_urls
 ```bash
 python3 manage.py makemigrations user
 python3 manage.py makemigrations category
+python3 manage.py makemigrations seller
 python3 manage.py migrate
 ```
 
@@ -37,6 +38,7 @@ python3 manage.py migrate
 ```bash
 python3 manage.py seed_users
 python3 manage.py seed_categories
+python3 manage.py seed_sellers
 ```
 
 ### Usuario para pruebas
@@ -119,3 +121,32 @@ curl --location --request PUT 'http://localhost:3000/api/admin/categories/16/' \
 curl --location --request DELETE 'http://localhost:3000/api/admin/categories/16/delete/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
 ```  
+### Sellers
+#### Listar
+```bash
+curl --location 'http://localhost:3000/api/admin/sellers/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
+```  
+### Crear  
+```bash
+curl --location 'http://localhost:3000/api/admin/sellers/create/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Marolio"
+}'
+```
+#### Update
+```bash
+curl --location --request PUT 'http://localhost:3000/api/admin/sellers/1/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Marolio S.A."
+}'
+```  
+#### Borrar
+```bash
+curl --location --request DELETE 'http://localhost:3000/api/admin/sellers/1/delete/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
+``` 

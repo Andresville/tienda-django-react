@@ -28,6 +28,7 @@ INSTALLED_APPS = [
   'django_extensions',
   'user',
   'category',
+  'seller',
 ]
 MIDDLEWARE = [
   'django.middleware.security.SecurityMiddleware',

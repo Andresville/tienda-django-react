@@ -29,13 +29,14 @@ python manage.py show_urls
 ## Migraciones  
 ```bash
 python3 manage.py makemigrations user
-python3 manage.py migrate
 python3 manage.py makemigrations category
+python3 manage.py migrate
 ```
 
 ## Seeders (Opcional)
 ```bash
 python3 manage.py seed_users
+python3 manage.py seed_categories
 ```
 
 ### Usuario para pruebas
@@ -87,4 +88,34 @@ curl --location --request PUT 'http://localhost:3000/api/admin/users/3/' \
   "email": "juan.perez@example.com",
   "role": "USER"
 }'
+```  
+### Categories  
+#### Listar
+```bash
+curl --location 'http://localhost:3000/api/admin/categories/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
+```  
+### Crear  
+```bash
+curl --location 'http://localhost:3000/api/admin/categories/create/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Frutas",
+    "ancestor": 6
+}'
 ```
+#### Update
+```bash
+curl --location --request PUT 'http://localhost:3000/api/admin/categories/16/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Frutas de estación"
+}'
+```  
+#### Borrar
+```bash
+curl --location --request DELETE 'http://localhost:3000/api/admin/categories/16/delete/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
+```  

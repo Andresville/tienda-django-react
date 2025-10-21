@@ -27,6 +27,7 @@ INSTALLED_APPS = [
   'rest_framework', # Django REST Framework
   'django_extensions',
   'user',
+  'category',
 ]
 MIDDLEWARE = [
   'django.middleware.security.SecurityMiddleware',

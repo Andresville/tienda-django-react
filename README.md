@@ -22,20 +22,22 @@ python3 manage.py runserver 0.0.0.0:3000
 ```  
 
 ## URLs
+<p style="color: red;">Este comando muestra las apis existentes</p>  
+
 ```bash
 python manage.py show_urls
 ``` 
 
-## Migraciones  
+## Migraciones & Seeders (Opcional)  
+<p style="color: red;">Ejecutar esto es necesario solo si no existe la db (supercheck.db)</p>
+
 ```bash
 python3 manage.py makemigrations user
 python3 manage.py makemigrations category
 python3 manage.py makemigrations seller
 python3 manage.py migrate
-```
 
-## Seeders (Opcional)
-```bash
+# Los seeders precargan datos en la base de datos, asi no esta vacia
 python3 manage.py seed_users
 python3 manage.py seed_categories
 python3 manage.py seed_sellers
@@ -46,6 +48,12 @@ python3 manage.py seed_sellers
 - Rol SELLER: email='seller@example.com', password='seller123'
 
 ## Curls  
+<p style="color: blue; background-color: white;">
+Los curls son utiles para probar las apis.<br/>
+En todos los casos que lleven token de autenticación es necesario obtenerlo primero mediante un llamado a <b>login</b><br/>
+El token tiene una vida de 24 horas, por lo tanto será válido durante ese período
+</p>
+
 ### Users  
 #### Login  
 ```bash
@@ -149,4 +157,5 @@ curl --location --request PUT 'http://localhost:3000/api/admin/sellers/1/' \
 ```bash
 curl --location --request DELETE 'http://localhost:3000/api/admin/sellers/1/delete/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
-``` 
+```  
+### Productos

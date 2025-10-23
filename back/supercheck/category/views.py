@@ -5,11 +5,12 @@ from django.views.decorators.http import require_http_methods
 from decouple import config
 
 from supercheck.common.exceptions import ValidationException
+from supercheck.common.decorators import admin_required
 from supercheck.common.decorators import admin_or_seller_required
 from .models import Category
 
 @require_http_methods(['POST'])
-@admin_or_seller_required
+@admin_required
 def create_category(request):
   try:
     data = json.loads(request.body)
@@ -51,7 +52,7 @@ def create_category(request):
     return JsonResponse({'error': str(e)}, status=500)
 
 @require_http_methods(['PUT','PATCH'])
-@admin_or_seller_required
+@admin_required
 def update_category(request, category_id):
   try:
     data = json.loads(request.body)
@@ -80,7 +81,7 @@ def update_category(request, category_id):
     return JsonResponse({'error': str(e)}, status=500)
 
 @require_http_methods(['DELETE'])
-@admin_or_seller_required
+@admin_required
 def delete_category(request, category_id):
   """
     Borra una categoria

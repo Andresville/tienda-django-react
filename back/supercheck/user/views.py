@@ -42,7 +42,6 @@ def login_user(request):
     return JsonResponse({'error': str(e)}, status=400)
 
 @require_http_methods(['POST'])
-@admin_required
 def create_user(request):
   try:
     data = json.loads(request.body)

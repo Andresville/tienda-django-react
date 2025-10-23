@@ -1,3 +1,36 @@
-back/.venv
+# ------------------------------
+# BACKEND (Python/Django)
+# ------------------------------
+# Entorno virtual de Python
+back/.venv/
+
+# Archivos generados
 __pycache__/
+*.pyc
+*.log
+
+# Archivos de base de datos y configuración sensible
+back/supercheck/supercheck.db
+*.sqlite3
+.env
+
+# Directorios de archivos subidos por el usuario (media)
+/back/supercheck/media/
+/media/
+
+# ------------------------------
+# FRONTEND (React/Node)
+# ------------------------------
+# Dependencias de Node
+tienda-frontend/node_modules
+/node_modules
+
+# Builds de producción
+tienda-frontend/build
+tienda-frontend/dist
+
+# Logs y caché de npm/yarn
+npm-debug.log*
+yarn-error.log*
+.eslintcache
 

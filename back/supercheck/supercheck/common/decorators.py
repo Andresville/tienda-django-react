@@ -26,7 +26,14 @@ def admin_or_seller_required(view_func):
     user = getattr(request, 'user', None)
     if not user:
       return JsonResponse({'error': 'Autenticación requerida'}, status=401)
-    if user.role != User.Roles.ADMIN and user.role != User.Roles.SELLER:
-      return JsonResponse({'error': 'Acceso denegado: solo administradores'}, status=403)
+    
+    # Lógica Corregida: Permitir si es ADMIN O SELLER
+    is_admin = user.role == User.Roles.ADMIN
+    is_seller = user.role == User.Roles.SELLER
+
+    if not (is_admin or is_seller):
+      # Nota: el mensaje de error del decorador original es genérico
+      return JsonResponse({'error': 'Acceso denegado: rol insuficiente'}, status=403)
+      
     return view_func(request, *args, **kwargs)
   return _wrapped_view

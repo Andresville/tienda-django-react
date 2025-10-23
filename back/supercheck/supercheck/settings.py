@@ -24,6 +24,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
+  'corsheaders',
   'rest_framework', # Django REST Framework
   'django_extensions',
   'user',
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
 ]
 MIDDLEWARE = [
   'django.middleware.security.SecurityMiddleware',
+  'corsheaders.middleware.CorsMiddleware',
   'django.middleware.common.CommonMiddleware',
   'user.middleware.JWTAuthenticationMiddleware',
 ]
@@ -72,3 +74,4 @@ REST_FRAMEWORK = {
 # ------------------------------
 STATIC_URL = '/static/'
 
+CORS_ALLOW_ALL_ORIGINS = True

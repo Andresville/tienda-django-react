@@ -3,14 +3,14 @@ from django.http import JsonResponse
 from django.db.utils import IntegrityError
 from django.views.decorators.http import require_http_methods
 from decouple import config
-
+from supercheck.common.decorators import admin_required
 from supercheck.common.decorators import admin_or_seller_required
 from .models import Product
 from seller.models import Seller
 from category.models import Category
 
 @require_http_methods(['POST'])
-@admin_or_seller_required
+@admin_required
 def create_product(request):
   try:
     data = json.loads(request.body)
@@ -61,7 +61,7 @@ def create_product(request):
     return JsonResponse({'error': str(e)}, status=500)
 
 @require_http_methods(['PUT','PATCH'])
-@admin_or_seller_required
+@admin_required
 def update_product(request, product_id):
   try:
     data = json.loads(request.body)
@@ -112,7 +112,7 @@ def update_product(request, product_id):
     return JsonResponse({'error': str(e)}, status=500)
 
 @require_http_methods(['DELETE'])
-@admin_or_seller_required
+@admin_required
 def delete_product(request, product_id):
   """
     Borra un producto
@@ -148,6 +148,7 @@ def products(request):
             'price': product.price,
             'price_without_taxes': product.price_without_taxes,
             'slug': product.slug,
+            'available_stock': product.available_stock,
             'seller': {
                 'id': product.seller.id,
                 'name': product.seller.name

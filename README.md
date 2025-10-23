@@ -202,8 +202,8 @@ curl --location --request DELETE 'http://localhost:8000/api/admin/products/2/del
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjExNzIzNDB9.PYs-n1NgwQFukAumqW89kCp5cXTreQf2ycTN_V4mmqI'
 ```  
 
-
-#### Configuración del Frontend (React)
+# FRONTEND
+## Configuración del Frontend (React)
 
 El frontend se construyó con React (Create React App) y utiliza Bootstrap para el diseño. Se comunica con el backend a través de http://localhost:8000.
 
@@ -211,16 +211,13 @@ Instalación de Dependencias
 
 Asegúrate de tener Node.js y npm instalados.
 
-# 1. Navega a la carpeta del frontend
+## 1. Navega a la carpeta del frontend
 cd tienda-frontend
 
-# 2. Instala las dependencias (React, Bootstrap, axios, router)
+## 2. Instala las dependencias (React, Bootstrap, axios, router)
 npm install react-router-dom axios bootstrap
 
-
-### Ejecución del Frontend
-
-# Ejecuta el servidor de desarrollo de React
+## Ejecuta el servidor de desarrollo de React
 npm run start
 
 Dirección de Acceso: http://localhost:3000

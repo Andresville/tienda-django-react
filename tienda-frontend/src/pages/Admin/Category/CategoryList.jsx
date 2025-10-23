@@ -1,40 +1,89 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../../../api/api';
-import { isAdmin } from '../../../utils/Auth'; // ⬅️ Importación necesaria
+import { isAdmin } from '../../../utils/Auth';
+
+const STYLES = {
+  CARD_BG: '#F7F4EF',
+  TEXT_COLOR: '#0B3149',
+  BUTTON_BG: '#FBBF49',
+  BUTTON_HOVER: '#F08011',
+  SEPARATOR_BG: '#E0E0E0', // Nuevo color para el separador
+};
+
+// Componente para una sola tarjeta de Categoría (más simple que producto)
+const CategoryCard = ({ cat, isUserAdmin, handleDelete }) => (
+  <div className="col-md-6 col-lg-4 mb-3">
+    <div className="card shadow-sm h-100" style={{ backgroundColor: STYLES.CARD_BG, color: STYLES.TEXT_COLOR, borderRadius: '10px', borderLeft: `5px solid ${STYLES.BUTTON_HOVER}` }}>
+      <div className="card-body d-flex flex-column">
+        <h5 className="card-title fw-bold mb-1" style={{ color: STYLES.BUTTON_HOVER }}>{cat.name}</h5>
+        <p className="card-text mb-1">Ruta: {cat.path}</p>
+        <p className="card-text mb-3 small text-muted">ID Ancestor: {cat.ancestor || 'Principal'}</p>
+        
+        {/* Botones de acción solo visibles para ADMIN */}
+        {isUserAdmin && (
+          <div className="mt-auto d-flex justify-content-end">
+            <Link 
+              to={`/admin/categories/edit/${cat.id}`} 
+              className="btn btn-sm text-dark me-2"
+              style={{ backgroundColor: STYLES.BUTTON_BG, fontWeight: 'bold' }}
+            >
+              Editar
+            </Link>
+            <button 
+              onClick={() => handleDelete(cat.id)} 
+              className="btn btn-sm btn-danger"
+            >
+              Eliminar
+            </button>
+          </div>
+        )}
+      </div>
+      {!isUserAdmin && (
+        <div className="card-footer text-center" style={{ backgroundColor: STYLES.CARD_BG }}>
+          <small className="text-muted">Solo visualización.</small>
+        </div>
+      )}
+    </div>
+  </div>
+);
+
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Determina si el usuario actual es Admin
+  const navigate = useNavigate();
+  
   const isUserAdmin = isAdmin();
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    // Si no es admin, redirigir
+    if (!isUserAdmin) {
+        navigate('/admin/products', { replace: true });
+    } else {
+        fetchCategories();
+    }
+  }, [isUserAdmin, navigate]);
 
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      // Endpoint: GET /api/admin/categories/ (Permitido para ADMIN y SELLER)
+      // Las categorías se obtienen ordenadas por 'path_ids' en el backend (que es jerárquico)
       const response = await api.get('/admin/categories/');
       setCategories(response.data);
     } catch (err) {
-      setError('Error al cargar la lista de categorías.');
+      setError('Error al cargar la lista de categorías. (Asegúrate de tener el rol adecuado)');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    // Evita que un SELLER intente borrar algo (el backend lo bloquearía, pero esto es más rápido)
     if (!isUserAdmin) return;
     
     if (window.confirm('¿Estás seguro de que quieres eliminar esta categoría?')) {
       try {
-        // Endpoint: DELETE /api/admin/categories/<id>/delete/
         await api.delete(`/admin/categories/${id}/delete/`);
         fetchCategories();
       } catch (err) {
@@ -43,63 +92,78 @@ const CategoryList = () => {
     }
   };
 
-  if (loading) return <div className="text-center mt-5">Cargando...</div>;
+  if (!isUserAdmin) return null; // Previene renderizado si va a redirigir
+  if (loading) return <div className="text-center mt-5">Cargando categorías...</div>;
   if (error) return <div className="alert alert-danger">{error}</div>;
 
-  // Calcula el número de columnas a mostrar (4 sin acciones, 5 con acciones)
-  const colSpanCount = isUserAdmin ? 5 : 4;
+  let lastAncestorId = null;
 
   return (
     <div>
-      <h2 className="mb-4">Gestión de Categorías</h2>
+      <h2 className="mb-4" style={{ color: STYLES.TEXT_COLOR }}>Gestión de Categorías</h2>
       
-      {/* Botón Crear solo visible para ADMIN */}
       {isUserAdmin && (
-        <Link to="/admin/categories/create" className="btn btn-success mb-3">
+        <Link 
+          to="/admin/categories/create" 
+          className="btn btn-lg mb-3"
+          style={{ backgroundColor: STYLES.BUTTON_BG, color: STYLES.TEXT_COLOR, fontWeight: 'bold', borderRadius: '10px' }}
+        >
           Crear Nueva Categoría
         </Link>
       )}
 
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Ruta</th>
-            <th>ID Ancestor</th>
-            {/* Columna Acciones solo visible para ADMIN */}
-            {isUserAdmin && <th>Acciones</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {categories.length === 0 ? (
-            <tr><td colSpan={colSpanCount} className="text-center">No hay categorías disponibles.</td></tr>
-          ) : (
-            categories.map((cat) => (
-              <tr key={cat.id}>
-                <td>{cat.id}</td>
-                <td>{cat.name}</td>
-                <td>{cat.path}</td>
-                <td>{cat.ancestor || 'N/A'}</td>
-                
-                {/* Celdas de Acciones solo visibles para ADMIN */}
-                {isUserAdmin && (
-                  <td>
-                    <Link to={`/admin/categories/edit/${cat.id}`} className="btn btn-sm btn-warning me-2">
-                      Editar
-                    </Link>
-                    <button onClick={() => handleDelete(cat.id)} className="btn btn-sm btn-danger">
-                      Eliminar
-                    </button>
-                  </td>
+      <div className="row mt-4">
+        {categories.length === 0 ? (
+          <div className="alert alert-info text-center">No hay categorías disponibles.</div>
+        ) : (
+          categories.map((cat, index) => {
+            let parentCategoryName = 'Categorías Principales';
+            const currentAncestorId = cat.ancestor || cat.id;
+
+            // Busca el nombre de la categoría principal (el primer elemento en el path)
+            if (cat.path && cat.path.includes('/')) {
+                parentCategoryName = cat.path.split('/')[0];
+            } else if (cat.ancestor === null) {
+                parentCategoryName = cat.name; // Es una categoría principal
+            }
+
+            // Determina si debemos mostrar un separador. 
+            // Si el ID del ancestro actual es diferente al último procesado, o si es la primera categoría.
+            const showSeparator = currentAncestorId !== lastAncestorId;
+
+            // Actualiza el ID del último ancestro
+            lastAncestorId = currentAncestorId;
+
+            return (
+              <React.Fragment key={cat.id}>
+                {/* 1. SEPARADOR (si el ancestro o la categoría principal cambian) */}
+                {showSeparator && (
+                  <div className="col-12 mt-4">
+                    <div 
+                      className="p-2 fw-bold text-center text-uppercase rounded shadow-sm"
+                      style={{ 
+                          backgroundColor: STYLES.SEPARATOR_BG, 
+                          color: STYLES.TEXT_COLOR,
+                          fontSize: cat.ancestor === null ? '1.25rem' : '1.1rem' 
+                      }}
+                    >
+                      {parentCategoryName} ({cat.ancestor === null ? 'PRINCIPAL' : 'SUBCATEGORÍAS'})
+                    </div>
+                  </div>
                 )}
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+
+                {/* 2. TARJETA DE CATEGORÍA */}
+                <CategoryCard 
+                  cat={cat} 
+                  isUserAdmin={isUserAdmin} 
+                  handleDelete={handleDelete} 
+                />
+              </React.Fragment>
+            );
+          })
+        )}
+      </div>
       
-      {/* Mensaje de restricción para Seller */}
       {!isUserAdmin && (
         <small className="text-muted">Estás visualizando la lista de categorías. Solo los Administradores pueden crear, editar o eliminar.</small>
       )}

@@ -27,7 +27,7 @@ const RegisterForm = ({ onSuccess }) => {
         surname,
         email,
         password,
-        role: 'USER' // Forzamos el rol estándar para el registro público
+        role: 'SELLER' // Forzamos el rol estándar para el registro público
       });
 
       setMessage('Registro exitoso. ¡Ahora puedes iniciar sesión!');

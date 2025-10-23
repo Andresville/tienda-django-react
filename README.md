@@ -18,7 +18,7 @@ pip install python-decouple
   python3 manage.py startapp product
   python3 manage.py startapp variant
 
-python3 manage.py runserver 0.0.0.0:3000
+python3 manage.py runserver
 ```  
 
 ## URLs
@@ -58,7 +58,7 @@ El token tiene una vida de 24 horas, por lo tanto será válido durante ese per�
 ### Users  
 #### Login  
 ```bash
-curl --location 'http://localhost:3000/api/users/login/' \
+curl --location 'http://localhost:8000/api/users/login/' \
 --header 'Content-Type: application/json' \
 --data-raw '{
   "email": "admin@example.com",
@@ -67,7 +67,7 @@ curl --location 'http://localhost:3000/api/users/login/' \
 ```  
 #### Create
 ```bash
-curl --location 'http://localhost:3000/api/admin/users/create/' \
+curl --location 'http://localhost:8000/api/admin/users/create/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjA2NjgzODN9.L7hXJIlQ6sV3STvBWPMTE6pa8p9ZJm26K19CtILdUxo' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -80,17 +80,17 @@ curl --location 'http://localhost:3000/api/admin/users/create/' \
 ```
 #### Listar 
 ```bash
-curl --location 'http://localhost:3000/api/admin/users/' \
+curl --location 'http://localhost:8000/api/admin/users/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjA2NjgzODN9.L7hXJIlQ6sV3STvBWPMTE6pa8p9ZJm26K19CtILdUxo'
 ```  
 #### Borrar
 ```bash
-curl --location --request DELETE 'http://localhost:3000/api/admin/users/3/delete/' \
+curl --location --request DELETE 'http://localhost:8000/api/admin/users/3/delete/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjA2NjgzODN9.L7hXJIlQ6sV3STvBWPMTE6pa8p9ZJm26K19CtILdUxo'
 ```  
 #### Update
 ```bash
-curl --location --request PUT 'http://localhost:3000/api/admin/users/3/' \
+curl --location --request PUT 'http://localhost:8000/api/admin/users/3/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjA2NjgzODN9.L7hXJIlQ6sV3STvBWPMTE6pa8p9ZJm26K19CtILdUxo' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -104,12 +104,12 @@ curl --location --request PUT 'http://localhost:3000/api/admin/users/3/' \
 ### Categories  
 #### Listar
 ```bash
-curl --location 'http://localhost:3000/api/admin/categories/' \
+curl --location 'http://localhost:8000/api/admin/categories/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
 ```  
 ### Crear  
 ```bash
-curl --location 'http://localhost:3000/api/admin/categories/create/' \
+curl --location 'http://localhost:8000/api/admin/categories/create/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI' \
 --header 'Content-Type: application/json' \
 --data '{
@@ -119,7 +119,7 @@ curl --location 'http://localhost:3000/api/admin/categories/create/' \
 ```
 #### Update
 ```bash
-curl --location --request PUT 'http://localhost:3000/api/admin/categories/16/' \
+curl --location --request PUT 'http://localhost:8000/api/admin/categories/16/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI' \
 --header 'Content-Type: application/json' \
 --data '{
@@ -128,19 +128,19 @@ curl --location --request PUT 'http://localhost:3000/api/admin/categories/16/' \
 ```  
 #### Borrar
 ```bash
-curl --location --request DELETE 'http://localhost:3000/api/admin/categories/16/delete/' \
+curl --location --request DELETE 'http://localhost:8000/api/admin/categories/16/delete/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
 ```  
 ---  
 ### Sellers
 #### Listar
 ```bash
-curl --location 'http://localhost:3000/api/admin/sellers/' \
+curl --location 'http://localhost:8000/api/admin/sellers/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
 ```  
 ### Crear  
 ```bash
-curl --location 'http://localhost:3000/api/admin/sellers/create/' \
+curl --location 'http://localhost:8000/api/admin/sellers/create/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI' \
 --header 'Content-Type: application/json' \
 --data '{
@@ -149,7 +149,7 @@ curl --location 'http://localhost:3000/api/admin/sellers/create/' \
 ```
 #### Update
 ```bash
-curl --location --request PUT 'http://localhost:3000/api/admin/sellers/1/' \
+curl --location --request PUT 'http://localhost:8000/api/admin/sellers/1/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI' \
 --header 'Content-Type: application/json' \
 --data '{
@@ -163,12 +163,12 @@ curl --location --request PUT 'http://localhost:3000/api/admin/sellers/1/' \
 ### Productos
 #### Listar
 ```bash
-curl --location 'http://localhost:3000/api/admin/products/' \
+curl --location 'http://localhost:8000/api/admin/products/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI'
 ```  
 ### Crear  
 ```bash
-curl --location 'http://localhost:3000/api/admin/products/create/' \
+curl --location 'http://localhost:8000/api/admin/products/create/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjEwODU1NDR9.3AWcLcFElU8zLuJ8YPQ-cZXEce9NiBZ5XHsTWx_gdcI' \
 --header 'Content-Type: application/json' \
 --data '{
@@ -183,7 +183,7 @@ curl --location 'http://localhost:3000/api/admin/products/create/' \
 ```
 #### Update
 ```bash
-curl --location --request PUT 'http://localhost:3000/api/admin/products/1/' \
+curl --location --request PUT 'http://localhost:8000/api/admin/products/1/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjExNzIzNDB9.PYs-n1NgwQFukAumqW89kCp5cXTreQf2ycTN_V4mmqI' \
 --header 'Content-Type: application/json' \
 --data '{
@@ -198,6 +198,29 @@ curl --location --request PUT 'http://localhost:3000/api/admin/products/1/' \
 ```  
 #### Borrar
 ```bash
-curl --location --request DELETE 'http://localhost:3000/api/admin/products/2/delete/' \
+curl --location --request DELETE 'http://localhost:8000/api/admin/products/2/delete/' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3NjExNzIzNDB9.PYs-n1NgwQFukAumqW89kCp5cXTreQf2ycTN_V4mmqI'
 ```  
+
+
+#### Configuración del Frontend (React)
+
+El frontend se construyó con React (Create React App) y utiliza Bootstrap para el diseño. Se comunica con el backend a través de http://localhost:8000.
+
+Instalación de Dependencias
+
+Asegúrate de tener Node.js y npm instalados.
+
+# 1. Navega a la carpeta del frontend
+cd tienda-frontend
+
+# 2. Instala las dependencias (React, Bootstrap, axios, router)
+npm install react-router-dom axios bootstrap
+
+
+### Ejecución del Frontend
+
+# Ejecuta el servidor de desarrollo de React
+npm run start
+
+Dirección de Acceso: http://localhost:3000

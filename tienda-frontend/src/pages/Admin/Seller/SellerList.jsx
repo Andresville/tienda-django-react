@@ -1,19 +1,68 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../../../api/api';
-import { isAdmin } from '../../../utils/Auth'; // ⬅️ Importación necesaria
+import { isAdmin } from '../../../utils/Auth';
+
+const STYLES = {
+  CARD_BG: '#F7F4EF',
+  TEXT_COLOR: '#0B3149',
+  BUTTON_BG: '#FBBF49',
+  BUTTON_HOVER: '#F08011',
+};
+
+// Componente para una sola tarjeta de Vendedor
+const SellerCard = ({ seller, isUserAdmin, handleDelete }) => (
+  <div className="col-md-6 col-lg-4 mb-3">
+    <div className="card shadow-sm h-100" style={{ backgroundColor: STYLES.CARD_BG, color: STYLES.TEXT_COLOR, borderRadius: '10px', borderLeft: `5px solid ${STYLES.BUTTON_BG}` }}>
+      <div className="card-body d-flex flex-column">
+        <h5 className="card-title fw-bold" style={{ color: STYLES.BUTTON_HOVER }}>{seller.name}</h5>
+        <p className="card-text mb-3 small text-muted">ID: {seller.id}</p>
+        
+        {/* Botones de acción solo visibles para ADMIN */}
+        {isUserAdmin && (
+          <div className="mt-auto d-flex justify-content-end">
+            <Link 
+              to={`/admin/sellers/edit/${seller.id}`} 
+              className="btn btn-sm text-dark me-2"
+              style={{ backgroundColor: STYLES.BUTTON_BG, fontWeight: 'bold' }}
+            >
+              Editar
+            </Link>
+            <button 
+              onClick={() => handleDelete(seller.id)} 
+              className="btn btn-sm btn-danger"
+            >
+              Eliminar
+            </button>
+          </div>
+        )}
+      </div>
+      {!isUserAdmin && (
+        <div className="card-footer text-center" style={{ backgroundColor: STYLES.CARD_BG }}>
+          <small className="text-muted">Solo visualización.</small>
+        </div>
+      )}
+    </div>
+  </div>
+);
+
 
 const SellerList = () => {
   const [sellers, setSellers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   
-  // Determina si el usuario actual es Admin
   const isUserAdmin = isAdmin();
 
+  // LÓGICA DE REDIRECCIÓN (si no es Admin, redirige a Productos)
   useEffect(() => {
-    fetchSellers();
-  }, []);
+    if (!isUserAdmin) {
+        navigate('/admin/products', { replace: true });
+    } else {
+        fetchSellers();
+    }
+  }, [isUserAdmin, navigate]);
 
   const fetchSellers = async () => {
     try {
@@ -21,8 +70,6 @@ const SellerList = () => {
       const response = await api.get('/admin/sellers/');
       setSellers(response.data);
     } catch (err) {
-      // Si el error es 403, significa que la API fue bloqueada (no debería pasar con un GET y SELLER)
-      // Pero si pasa, mostramos el error:
       setError('Error al cargar la lista de vendedores. (Asegúrate de tener el rol adecuado)');
     } finally {
       setLoading(false);
@@ -31,12 +78,10 @@ const SellerList = () => {
 
   const handleDelete = async (id) => {
     if (!isUserAdmin) return; // Doble chequeo de seguridad
+
     if (window.confirm('¿Estás seguro de que quieres eliminar este vendedor?')) {
       try {
-        // La API de borrado usa DELETE en /api/admin/sellers/<id>/delete/
         await api.delete(`/admin/sellers/${id}/delete/`);
-        
-        // Refrescar la lista
         fetchSellers();
       } catch (err) {
         alert('Error al eliminar el vendedor. ' + (err.response?.data?.error || ''));
@@ -44,56 +89,40 @@ const SellerList = () => {
     }
   };
 
-  if (loading) return <div className="text-center mt-5">Cargando...</div>;
+  if (!isUserAdmin) return null; // Previene renderizado si va a redirigir
+  if (loading) return <div className="text-center mt-5">Cargando vendedores...</div>;
   if (error) return <div className="alert alert-danger">{error}</div>;
 
   return (
     <div>
-      <h2 className="mb-4">Gestión de Vendedores</h2>
+      <h2 className="mb-4" style={{ color: STYLES.TEXT_COLOR }}>Gestión de Vendedores</h2>
       
       {/* Botón Crear solo visible para ADMIN */}
       {isUserAdmin && (
-        <Link to="/admin/sellers/create" className="btn btn-success mb-3">
+        <Link 
+          to="/admin/sellers/create" 
+          className="btn btn-lg mb-3"
+          style={{ backgroundColor: STYLES.BUTTON_BG, color: STYLES.TEXT_COLOR, fontWeight: 'bold', borderRadius: '10px' }}
+        >
           Crear Nuevo Vendedor
         </Link>
       )}
 
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            {/* Columna Acciones solo visible para ADMIN */}
-            {isUserAdmin && <th>Acciones</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {sellers.length === 0 ? (
-            <tr><td colSpan={isUserAdmin ? "3" : "2"} className="text-center">No hay vendedores disponibles.</td></tr>
-          ) : (
-            sellers.map((seller) => (
-              <tr key={seller.id}>
-                <td>{seller.id}</td>
-                <td>{seller.name}</td>
-                
-                {/* Celdas de Acciones solo visibles para ADMIN */}
-                {isUserAdmin && (
-                  <td>
-                    <Link to={`/admin/sellers/edit/${seller.id}`} className="btn btn-sm btn-warning me-2">
-                      Editar
-                    </Link>
-                    <button onClick={() => handleDelete(seller.id)} className="btn btn-sm btn-danger">
-                      Eliminar
-                    </button>
-                  </td>
-                )}
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+      <div className="row mt-4">
+        {sellers.length === 0 ? (
+          <div className="alert alert-info text-center">No hay vendedores disponibles.</div>
+        ) : (
+          sellers.map((seller) => (
+            <SellerCard 
+              key={seller.id} 
+              seller={seller} 
+              isUserAdmin={isUserAdmin} 
+              handleDelete={handleDelete} 
+            />
+          ))
+        )}
+      </div>
       
-      {/* Mensaje para Sellers */}
       {!isUserAdmin && (
         <small className="text-muted">Estás visualizando la lista de vendedores. Solo los Administradores pueden crear, editar o eliminar.</small>
       )}

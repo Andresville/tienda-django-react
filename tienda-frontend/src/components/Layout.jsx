@@ -1,12 +1,16 @@
 import React from 'react';
 import NavBar from './NavBar';
+import Footer from './Footer';
 
 const Layout = ({ children }) => {
   return (
-    <>
+    <div className="d-flex flex-column min-vh-100">
       <NavBar />
-      <div className="container mt-4">{children}</div>
-    </>
+      <main className="container-fluid flex-grow-1">
+        {children}
+      </main>
+      <Footer /> 
+    </div>
   );
 };
 

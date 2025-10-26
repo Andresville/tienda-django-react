@@ -10,7 +10,6 @@ const api = axios.create({
   },
 });
 
-// Interceptor para agregar el Token en cada request
 api.interceptors.request.use(config => {
   const token = getAuthToken();
   if (token) {
@@ -21,15 +20,13 @@ api.interceptors.request.use(config => {
   return Promise.reject(error);
 });
 
-// Interceptor para manejar tokens expirados/inválidos globalmente
 api.interceptors.response.use(
   response => response,
   error => {
-    // Si el error es 401 (Unauthorized), y no es la ruta de login, forzar logout
     if (error.response && error.response.status === 401 && error.config.url !== '/users/login/') {
       console.error('Token expirado o inválido. Cerrando sesión.');
       logout();
-      window.location.href = '/login'; // Redirige al login
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

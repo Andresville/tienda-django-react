@@ -15,6 +15,7 @@ class Product(models.Model):
   # Precios almacenados como enteros (ej: 10.50 -> 1050)
   price = models.BigIntegerField() # requerido
   price_without_taxes = models.BigIntegerField()
+  discount = models.PositiveIntegerField(default=0)
   # Relaciones
   seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name='products')
   categories = models.ManyToManyField('category.Category', related_name='products', blank=True)

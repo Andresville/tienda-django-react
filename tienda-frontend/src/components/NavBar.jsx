@@ -1,12 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { isAuthenticated, isAdmin, isAdminOrSeller, logout } from "../utils/Auth";
+import {
+  isAuthenticated,
+  isAdmin,
+  isAdminOrSeller,
+  logout,
+} from "../utils/Auth";
 
-// Definición de estilos de color para usar en el NavBar
 const STYLES = {
-  NAV_BG: '#0B3149',     // fourthColor (Azul Oscuro)
-  TEXT_COLOR: '#F7F4EF', // firstColor (Casi Blanco)
-  BUTTON_COLOR: '#FBBF49', // secondColor (Naranja Suave)
+  NAV_BG: "#0B3149",
+  TEXT_COLOR: "#F7F4EF",
+  BUTTON_COLOR: "#FBBF49",
 };
 
 const NavBar = () => {
@@ -15,24 +19,38 @@ const NavBar = () => {
     window.location.href = "/login";
   };
 
-  // Función para generar botones con el estilo deseado
   const getButtonStyle = (isLogout = false) => ({
-    backgroundColor: isLogout ? 'transparent' : STYLES.BUTTON_COLOR,
+    backgroundColor: isLogout ? "transparent" : STYLES.BUTTON_COLOR,
     color: isLogout ? STYLES.BUTTON_COLOR : STYLES.NAV_BG,
-    border: isLogout ? `1px solid ${STYLES.BUTTON_COLOR}` : 'none',
-    fontWeight: 'bold',
-    borderRadius: '10px',
-    padding: '8px 15px',
-    transition: 'background-color 0.2s',
+    border: isLogout ? `1px solid ${STYLES.BUTTON_COLOR}` : "none",
+    fontWeight: "bold",
+    borderRadius: "10px",
+    padding: "8px 15px",
+    transition: "background-color 0.2s",
   });
 
   return (
-    <nav className="navbar navbar-expand-lg" style={{ backgroundColor: STYLES.NAV_BG }}>
+    <nav
+      className="navbar navbar-expand-lg"
+      style={{ backgroundColor: STYLES.NAV_BG }}
+    >
       <div className="container-fluid">
-        <Link className="navbar-brand fw-bold fs-4" to="/" style={{ color: STYLES.TEXT_COLOR }}>
+        <Link
+          className="navbar-brand fw-bold fs-4"
+          to="/"
+          style={{ color: STYLES.TEXT_COLOR }}
+        >
           SuperCheck
         </Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
 
@@ -41,40 +59,54 @@ const NavBar = () => {
             {isAuthenticated() && (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/" style={{ color: STYLES.TEXT_COLOR }}>
+                  <Link
+                    className="nav-link"
+                    to="/"
+                    style={{ color: STYLES.TEXT_COLOR }}
+                  >
                     Home
                   </Link>
                 </li>
-                
-                {/* PRODUCTOS: Visible para ADMIN y SELLER */}
-                {isAdminOrSeller() && ( 
+                {isAdminOrSeller() && (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/admin/products" style={{ color: STYLES.TEXT_COLOR }}>
+                    <Link
+                      className="nav-link"
+                      to="/admin/products"
+                      style={{ color: STYLES.TEXT_COLOR }}
+                    >
                       Productos
                     </Link>
                   </li>
                 )}
-
-                {/* CATEGORÍAS Y VENDEDORES: Visible solo para ADMIN */}
-                {isAdmin() && ( 
+                {isAdmin() && (
                   <>
                     <li className="nav-item">
-                      <Link className="nav-link" to="/admin/categories" style={{ color: STYLES.TEXT_COLOR }}>
+                      <Link
+                        className="nav-link"
+                        to="/admin/categories"
+                        style={{ color: STYLES.TEXT_COLOR }}
+                      >
                         Categorías
                       </Link>
                     </li>
                     <li className="nav-item">
-                      <Link className="nav-link" to="/admin/sellers" style={{ color: STYLES.TEXT_COLOR }}>
+                      <Link
+                        className="nav-link"
+                        to="/admin/sellers"
+                        style={{ color: STYLES.TEXT_COLOR }}
+                      >
                         Vendedores
                       </Link>
                     </li>
                   </>
                 )}
-
-                {/* ENLACE DE VISTA (Para rol USER) */}
                 {!isAdminOrSeller() && (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/products" style={{ color: STYLES.TEXT_COLOR }}>
+                    <Link
+                      className="nav-link"
+                      to="/products"
+                      style={{ color: STYLES.TEXT_COLOR }}
+                    >
                       Catálogo (Vista)
                     </Link>
                   </li>
@@ -82,7 +114,7 @@ const NavBar = () => {
               </>
             )}
           </ul>
-          
+
           <ul className="navbar-nav">
             {isAuthenticated() ? (
               <li className="nav-item">
@@ -109,5 +141,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-
-

@@ -15,7 +15,7 @@ def create_product(request):
   try:
     data = json.loads(request.body)
     # Validaciones mínimas
-    required_fields = ['name','description','available_stock','price','price_without_taxes','seller_id','category_ids']
+    required_fields = ['name','description','available_stock','price','price_without_taxes', 'discount','seller_id','category_ids']
     for field in required_fields:
       if field not in data:
         return JsonResponse({'error': f'Falta el campo {field}'}, status=400)
@@ -28,6 +28,7 @@ def create_product(request):
         available_stock=int(data['available_stock']),
         price=int(data['price']),
         price_without_taxes=int(data['price_without_taxes']),
+        discount=int(data['discount']),
         seller=Seller.objects.get(id=int(data['seller_id']))
       )
     except IntegrityError:
@@ -50,6 +51,7 @@ def create_product(request):
       "name": product.name,
       "price": product.price,
       "price_without_taxes": product.price_without_taxes,
+      "discount": product.discount,
       "available_stock": product.available_stock,
       "seller": product.seller.id,
       "categories": list(product.categories.values_list('id', flat=True))
@@ -66,7 +68,7 @@ def update_product(request, product_id):
   try:
     data = json.loads(request.body)
     product = Product.objects.get(id=product_id, available=True)
-    updatable_fields = ['name','description','available_stock','price','price_without_taxes']
+    updatable_fields = ['name','description','available_stock','price','price_without_taxes','discount']
 
     for field in updatable_fields:
       if field in data:
@@ -96,6 +98,7 @@ def update_product(request, product_id):
       'description': product.description,
       'price': product.price,
       'price_without_taxes': product.price_without_taxes,
+      'discount': product.discount,
       'slug': product.slug,
       'seller': {
           'id': product.seller.id,
@@ -147,6 +150,7 @@ def products(request):
             'description': product.description,
             'price': product.price,
             'price_without_taxes': product.price_without_taxes,
+            'discount': product.discount,
             'slug': product.slug,
             'available_stock': product.available_stock,
             'seller': {
